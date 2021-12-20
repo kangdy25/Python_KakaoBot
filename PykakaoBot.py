@@ -3,10 +3,10 @@ from io import BytesIO
 import win32clipboard 
 from PIL import Image
 from datetime import datetime, timedelta
+from pynput.keyboard import Key, Controller
 
 # # 카톡창 이름, (활성화 상태의 열려있는 창)
-kakao_opentalk_name = '강동윤'
-# kakao_opentalk_name = '💒 행복한교회 청년부 공지방 📢'
+kakao_opentalk_name = '💒 행복한교회 청년부 공지방 📢'
 
 # # 채팅방에 메시지 전송
 def kakao_sendtext(chatroom_name, text):
@@ -16,7 +16,30 @@ def kakao_sendtext(chatroom_name, text):
     # hwndListControl = win32gui.FindWindowEx( hwndMain, None, "EVA_VH_ListControl_Dblclk", None)
 
     win32api.SendMessage(hwndEdit, win32con.WM_SETTEXT, 0, text)
-    SendReturn(hwndEdit)
+    pressPaste()
+    time.sleep(0.01)
+    returnPaste()
+
+    print("sent") 
+
+    returnPaste()
+
+# # 붙여넣기
+def pressPaste():
+    keyboard = Controller()
+
+    keyboard.press(Key.ctrl)
+    keyboard.press('v')
+    time.sleep(0.01)
+    keyboard.release(Key.ctrl)
+    keyboard.release('v')
+
+# # 엔터
+def returnPaste():
+    keyboard = Controller()
+    keyboard.press(Key.enter)
+    time.sleep(0.01)
+    keyboard.release(Key.enter)
 
 # # 엔터
 def SendReturn(hwnd):
@@ -46,26 +69,25 @@ def send_to_clipboard(clip_type, data):
     win32clipboard.SetClipboardData(clip_type, data) 
     win32clipboard.CloseClipboard() 
 
-# # 말씀 요약 파일 불러오기
-# def fileCopy():
-#     yesterday = datetime.today() - timedelta(1)
-#     Correctyesterday= yesterday.strftime("%Y_%m_%d")
+# 말씀 요약 파일 불러오기
+def fileCopy():
+    yesterday = datetime.today() - timedelta(1)
+    Correctyesterday= yesterday.strftime("%Y_%m_%d")
 
-#     image = Image.open(str(Correctyesterday) + '.jpg') 
+    # image = Image.open("/ToSend_img" + str(Correctyesterday) + '.jpg') 
+    image = Image.open("C:/Programming/Python/Python_AutoWork/ToSend_img" + "/" + str(Correctyesterday) + ".jpg") 
 
-#     output = BytesIO() 
-#     image.convert("RGB").save(output, "BMP") 
-#     data = output.getvalue()[14:] # The file header off-set of BMP is 14 bytes. 
-#     output.close() 
-#     send_to_clipboard(win32clipboard.CF_DIB, data)
-
+    output = BytesIO() 
+    image.convert("RGB").save(output, "BMP") 
+    data = output.getvalue()[14:] # The file header off-set of BMP is 14 bytes. 
+    output.close() 
+    send_to_clipboard(win32clipboard.CF_DIB, data)
 
 def main():
-    # fileCopy() # 이미지 클립보드 복사
     open_chatroom(kakao_opentalk_name)  # 채팅방 열기
-    text = "5"
+    text = "이번 주 말씀 요약입니다~~ \n청년부 모든 사람이 한 주도 말씀 기억하시면서 승리하시길 소망합니다"
+    fileCopy() # 이미지 클립보드 복사
     kakao_sendtext(kakao_opentalk_name, text)    # 메시지 전송
-
 
 if __name__ == '__main__':
     main()
