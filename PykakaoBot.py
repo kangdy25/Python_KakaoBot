@@ -91,7 +91,7 @@ def main():
     kakao_sendtext(kakao_opentalk_name, text)    # 메시지 전송
 
 if __name__ == '__main__':
-    schedule.every().sunday.at("22:42").do(main)
+    schedule.every().monday.at("12:00").do(main)
     
     while True: 
         schedule.run_pending() 
