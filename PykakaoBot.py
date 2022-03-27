@@ -9,6 +9,8 @@ import schedule
 # # 카톡창 이름, (활성화 상태의 열려있는 창)
 kakao_opentalk_name = '💒 행복한교회 청년부 공지방 📢'
 
+
+
 # # 채팅방에 메시지 전송
 def kakao_sendtext(chatroom_name, text):
     # # 핸들 _ 채팅방
@@ -91,7 +93,7 @@ def main():
     kakao_sendtext(kakao_opentalk_name, text)    # 메시지 전송
 
 if __name__ == '__main__':
-    schedule.every().monday.at("12:00").do(main)
+    schedule.every().monday.at("11:59").do(main)
     
     while True: 
         schedule.run_pending() 
